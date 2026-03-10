@@ -12,4 +12,5 @@ export async function updatePackageJson(root) {
     };
 
     await fs.writeJson(pkgPath, pkg, { spaces: 2 });
+    console.log(`📄 Updated package.json at ${pkgPath}`);
 }

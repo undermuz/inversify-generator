@@ -5,17 +5,43 @@ export async function updateTsConfig(root, tsconfigPath) {
     let configPath = tsconfigPath;
 
     if (!configPath) {
-        // Find the nearest tsconfig*.json with compilerOptions
-        const possibleNames = ["tsconfig.json", "tsconfig.app.json", "tsconfig.build.json"];
-        for (const name of possibleNames) {
-            const candidate = path.join(root, name);
-            if (await fs.pathExists(candidate)) {
-                const content = await fs.readJson(candidate);
-                if (content.compilerOptions) {
-                    configPath = candidate;
-                    break;
+        // Search upward from root for any tsconfig*.json containing compilerOptions,
+        // but don't go above the current working directory.
+        let current = path.resolve(root);
+        const stop = path.resolve(process.cwd());
+        const pattern = /^tsconfig.*\.json$/i;
+
+        while (true) {
+            if (current.startsWith(stop)) {
+                // read directory entries
+                const entries = await fs.readdir(current);
+                for (const entry of entries) {
+                    if (pattern.test(entry)) {
+                        const candidate = path.join(current, entry);
+                        const content = await fs.readJson(candidate);
+
+                        console.log(`📄 Candidate tsconfig file: ${candidate}`);
+                        
+                        if (content && content.compilerOptions) {
+                            configPath = candidate;
+
+                            console.log(`✅ Using tsconfig file: ${configPath}`);
+
+                            break;
+                        }
+                    }
                 }
             }
+
+            if (configPath) break;
+
+            // if we've reached or passed the stop directory, break out
+            if (current === stop || current === path.parse(current).root) {
+                break;
+            }
+
+            // move up one directory
+            current = path.dirname(current);
         }
     }
 
@@ -40,6 +66,7 @@ export async function updateTsConfig(root, tsconfigPath) {
     config.compilerOptions.experimentalDecorators = true;
 
     await fs.writeJson(configPath, config, { spaces: 2 });
+    console.log(`📄 Updated tsconfig file: ${configPath}`);
 
     return configPath;
 }

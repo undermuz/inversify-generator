@@ -35,8 +35,24 @@ export async function addPresetModule(diPath, presetName) {
         );
     }
 
-    // copy entire preset directory
-    await fs.copy(presetDir, destDir, { overwrite: false, errorOnExist: true });
+    // copy entire preset directory and log each file
+    const copyWithLogging = async (src, dst) => {
+        const items = await fs.readdir(src);
+        await fs.ensureDir(dst);
+        for (const item of items) {
+            const s = path.join(src, item);
+            const d = path.join(dst, item);
+            const stat = await fs.stat(s);
+            if (stat.isDirectory()) {
+                await copyWithLogging(s, d);
+            } else {
+                await fs.copy(s, d, { overwrite: false, errorOnExist: true });
+                console.log(`📄 Created ${d}`);
+            }
+        }
+    };
+    await copyWithLogging(presetDir, destDir);
+    console.log(`📁 Copied preset directory to ${destDir}`);
 
     // if there is a module.ts, attempt to update container
     const moduleFile = path.join(destDir, "module.ts");

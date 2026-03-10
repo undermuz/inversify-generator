@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import { copyFiles } from "./actions/copyFiles.js";
 import { updatePackageJson } from "./actions/updatePackageJson.js";
 import { addModule } from "./actions/addModule.js";
+import { addPresetModule } from "./actions/addPresetModule.js";
 import { updateTsConfig } from "./actions/updateTsConfig.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -33,7 +34,7 @@ program
             console.log("🔧 Update tsconfig.json...");
 
             const tsconfigPath = command.optsWithGlobals().tsconfigPath;
-            await updateTsConfig(process.cwd(), tsconfigPath);
+            await updateTsConfig(target, tsconfigPath);
 
             console.log("✨ InversifyJs successfully installed!");
         } catch (error) {

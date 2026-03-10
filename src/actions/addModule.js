@@ -30,6 +30,7 @@ export async function addModule(diPath, moduleName) {
     }
 
     await fs.ensureDir(modulePath);
+    console.log(`📁 Created directory ${modulePath}`);
 
     // compute pascal case base name (e.g. "my-provider" -> "MyProvider")
     const pascalName = normalized
@@ -68,18 +69,16 @@ export async function addModule(diPath, moduleName) {
         return res;
     };
 
-    await fs.writeFile(
-        path.join(modulePath, "module.ts"),
-        apply(moduleTemplate),
-    );
-    await fs.writeFile(
-        path.join(modulePath, "provider.ts"),
-        apply(providerTemplate),
-    );
-    await fs.writeFile(
-        path.join(modulePath, "types.ts"),
-        apply(typesTemplate),
-    );
+    const moduleFile = path.join(modulePath, "module.ts");
+    const providerFile = path.join(modulePath, "provider.ts");
+    const typesFile = path.join(modulePath, "types.ts");
+
+    await fs.writeFile(moduleFile, apply(moduleTemplate));
+    console.log(`📄 Created ${moduleFile}`);
+    await fs.writeFile(providerFile, apply(providerTemplate));
+    console.log(`📄 Created ${providerFile}`);
+    await fs.writeFile(typesFile, apply(typesTemplate));
+    console.log(`📄 Created ${typesFile}`);
 
     // update container.ts to wire the new module
     const containerPath = path.join(diPath, "container.ts");
@@ -126,6 +125,7 @@ export async function addModule(diPath, moduleName) {
     }
 
     await fs.writeFile(containerPath, containerContent);
+    console.log(`📄 Updated container file: ${containerPath}`);
 
     return {
         name: normalized,
