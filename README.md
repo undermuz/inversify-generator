@@ -8,8 +8,8 @@ It installs required dependencies, generates di structure, and configures a read
 ## 🚀 Features
 
 - Adds InversifyJS to any js project
-- Generates a complete di structure:
-    -
+- Generates a complete di structure
+- Provides preset modules for common use cases (env, react)
 - Updates `package.json` with required dependencies
 - Works in Nx and non-Nx environments
 - Zero configuration required
@@ -77,6 +77,36 @@ The command will:
 - Generate `module.ts` with container module
 - Automatically update the main `container.ts` to include the new module
 
+### Add a preset module
+
+After initialization, you can add predefined preset modules using:
+
+```sh
+npx @undermuz/inversify-generator add-preset-module <name>
+
+<cwd>/src/di/<name>
+```
+
+Available presets: `env`, `react`
+
+Examples:
+
+```sh
+# Add the "env" preset module
+npx @undermuz/inversify-generator add-preset-module env
+
+# Add the "react" preset module
+npx @undermuz/inversify-generator add-preset-module react
+
+# Specify custom app path
+npx @undermuz/inversify-generator add-preset-module env --project=apps/web-app/src
+```
+
+The command will:
+
+- Copy the entire preset directory from `presets/<name>` to the app's `di/` directory
+- If the preset contains `module.ts`, automatically update the main `container.ts` to include the new module
+
 ---
 
 ## 📁 What gets generated
@@ -103,6 +133,17 @@ di/
     module.ts
     provider.ts
   container.tsx   # (automatically updated)
+```
+
+### Adding preset modules
+
+When you add a preset module using `add-preset-module`, the entire preset directory is copied:
+
+```
+di/
+  <PRESET_NAME>/     # copied from presets/<PRESET_NAME>
+    <PRESET_FILES>
+  container.ts       # (automatically updated if module.ts exists in <PRESET_NAME>)
 ```
 
 ---
