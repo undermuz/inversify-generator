@@ -1,6 +1,6 @@
 {
   "name": "@undermuz/inversify-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "type": "module",
   "bin": {
@@ -17,7 +17,15 @@
   ],
   "author": "undermuz",
   "license": "MIT",
-  "description": "",
+  "description": "A lightweight CLI tool that automatically sets up InversifyJS in any JS or Nx-based project",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/undermuz/inversify-generator"
+  },
+  "bugs": {
+    "url": "https://github.com/undermuz/inversify-generator/issues"
+  },
+  "homepage": "https://github.com/undermuz/inversify-generator#readme",
   "dependencies": {
     "commander": "^12.0.0",
     "fs-extra": "^11.2.0"

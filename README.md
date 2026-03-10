@@ -3,6 +3,9 @@
 A lightweight CLI tool that automatically sets up **InversifyJS** in any Js or Nx-based project.
 It installs required dependencies, generates di structure, and configures a ready-to-use di setup.
 
+[![npm](https://img.shields.io/npm/v/@undermuz/inversify-generator.svg)](https://www.npmjs.com/package/@undermuz/inversify-generator)
+[![GitHub](https://img.shields.io/badge/GitHub-undermuz%2Finversify--generator-blue)](https://github.com/undermuz/inversify-generator)
+
 ---
 
 ## 🚀 Features
