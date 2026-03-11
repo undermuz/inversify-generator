@@ -3,6 +3,8 @@
 A lightweight CLI tool that automatically sets up **InversifyJS** in any Js or Nx-based project.
 It installs required dependencies, generates di structure, and configures a ready-to-use di setup.
 
+👉 Learn more about the underlying DI framework at [inversify.io](https://inversify.io/).
+
 [![npm](https://img.shields.io/npm/v/@undermuz/inversify-generator.svg)](https://www.npmjs.com/package/@undermuz/inversify-generator)
 [![GitHub](https://img.shields.io/badge/GitHub-undermuz%2Finversify--generator-blue)](https://github.com/undermuz/inversify-generator)
 
@@ -155,6 +157,89 @@ di/
 
 - reflect-metadata
 - inversify
+
+---
+
+## 💡 Examples
+
+After running the generator and adding modules, you can use the container in your application code.  Typical workflow:
+
+```ts
+// src/di/container.ts (generated)
+import { Container } from "inversify";
+import { someModule } from "./some-module/module";
+
+export const container = new Container();
+container.load(someModule);
+```
+
+```ts
+// src/di/some-module/types.ts
+export const TYPES = {
+  SomeService: Symbol.for("SomeService"),
+};
+```
+
+```ts
+// src/di/some-module/provider.ts
+import { injectable } from "inversify";
+import { createSomeService } from "./service";
+
+@injectable()
+export class SomeService {
+  constructor() {}
+  sayHi() { console.log("hello from injected service"); }
+}
+```
+
+```ts
+// src/index.ts
+import "reflect-metadata"; // required by inversify
+import { container } from "./di/container";
+import { TYPES } from "./di/some-module/types";
+import { SomeService } from "./di/some-module/provider";
+
+const service = container.get<SomeService>(TYPES.SomeService);
+service.sayHi();
+```
+
+### React example
+
+If you generated the `react` preset (or manually set up the bindings), you can expose the container via a provider and consume it in components:
+
+
+```tsx
+// src/App.tsx
+import React from "react";
+import { useDi } from "./di/ReactProvider";
+import { TYPES } from "./di/some-module/types";
+import { SomeService } from "./di/some-module/provider";
+
+import { DiProvider } from "./di/ReactProvider";
+
+function Page() {
+  const container = useDi();
+  const service = container.get<SomeService>(TYPES.SomeService);
+
+  React.useEffect(() => {
+    service.sayHi();
+  }, [service]);
+
+  return <div>Check the console for a greeting</div>;
+}
+
+function App() {
+  return (
+    <DiProvider>
+      <Page />
+    </DiProvider>
+  );
+}
+
+export default App;
+```
+
+> The examples above show basic binding and retrieval; for more advanced patterns check the [Inversify docs](https://inversify.io/).
 
 ---
 
