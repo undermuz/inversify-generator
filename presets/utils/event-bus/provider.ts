@@ -9,7 +9,7 @@ import type {
 } from "./types"
 
 import type { ILogger } from "../../types/logger"
-import type { ILoggerFactory } from "../../logger/logger.types"
+import type { ILoggerFactory } from "../../logger/types"
 import { catchError } from "../common/catchError"
 
 const IsObject = (obj: unknown) => typeof obj === "object" && obj !== null

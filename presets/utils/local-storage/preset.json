@@ -1,0 +1,4 @@
+{
+  "files": ["types.ts"],
+  "dependencies": [{ "preset": "types", "files": ["initializable.ts"] }]
+}

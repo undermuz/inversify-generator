@@ -9,6 +9,8 @@ export type BaseEvents = {
     [key: string]: any[]
 }
 
+export const EventBusProvider = Symbol.for("EventBusProvider")
+
 export interface EventEmitter<Events extends BaseEvents = BaseEvents> {
     on: <K extends keyof Events>(
         eventName: K,

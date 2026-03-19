@@ -1,6 +1,6 @@
 import { getLogger } from "@logtape/logtape"
 
-import type { ILoggerSettings } from "../logger.types"
+import type { ILoggerSettings } from "../types"
 import { ILogger } from "../../types/logger"
 
 export const logTapeFactory = (

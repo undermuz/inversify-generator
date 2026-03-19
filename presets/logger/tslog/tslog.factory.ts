@@ -1,7 +1,7 @@
 import { Logger, type ILogObj } from "tslog"
 
 import type { ILogger } from "../../types/logger"
-import type { ILoggerSettings } from "../logger.types"
+import type { ILoggerSettings } from "../types"
 
 export const tslogFactory = (
     name: string,

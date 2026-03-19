@@ -1,0 +1,15 @@
+{
+  "files": [
+    "module.ts",
+    "provider.ts",
+    "types.ts"
+  ],
+  "module": {
+    "file": "module.ts",
+    "export": "CacheModule"
+  },
+  "dependencies": [
+    { "preset": "utils/local-storage", "files": ["types.ts"] },
+    { "preset": "types", "files": ["initializable.ts"] }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "files": ["module.ts", "provider.ts"],
+  "module": {
+    "file": "module.ts",
+    "export": "EnvViteModule"
+  },
+  "dependencies": [{ "preset": "env", "files": ["types.ts"] }]
+}

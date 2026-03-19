@@ -87,12 +87,13 @@ The command will:
 After initialization, you can add predefined preset modules using:
 
 ```sh
-npx @undermuz/inversify-generator add-preset-module <name>
+npx @undermuz/inversify-generator add-preset-module <selector>
 
-<cwd>/src/di/<name>
+<cwd>/src/di/<selector>
 ```
 
-Available presets: `env`, `react`
+`<selector>` supports nested preset paths (for example `utils/cache`, `logger/logtape`).
+Selectors that do not have their own `preset.json` are treated as preset groups and cannot be added directly.
 
 Examples:
 
@@ -102,6 +103,12 @@ npx @undermuz/inversify-generator add-preset-module env
 
 # Add the "react" preset module
 npx @undermuz/inversify-generator add-preset-module react
+
+# Add nested utility preset
+npx @undermuz/inversify-generator add-preset-module utils/cache
+
+# Choose concrete logger implementation
+npx @undermuz/inversify-generator add-preset-module logger/logtape
 
 # Specify custom app path
 npx @undermuz/inversify-generator add-preset-module env --project=apps/web-app/src
@@ -142,13 +149,32 @@ di/
 
 ### Adding preset modules
 
-When you add a preset module using `add-preset-module`, the entire preset directory is copied:
+When you add a preset module using `add-preset-module`, files are copied according to preset manifests:
 
 ```
 di/
-  <PRESET_NAME>/     # copied from presets/<PRESET_NAME>
-    <PRESET_FILES>
-  container.ts       # (automatically updated if module.ts exists in <PRESET_NAME>)
+  <PRESET_SELECTOR>/   # copied from presets/<PRESET_SELECTOR>
+    <FILES_FROM_MANIFEST>
+  <DEPENDENCY_SELECTOR>/
+    <DEPENDENCY_FILES_FROM_MANIFEST>
+  container.ts         # updated for presets with a declared module
+```
+
+### Preset manifest dependencies
+
+Each standalone preset has `preset.json` with:
+- `files`: what to copy
+- `module` (optional): what to import/load into `container.ts`
+- `dependencies` (optional): dependent preset selectors and optional file subsets
+
+To auto-suggest dependencies from relative imports:
+
+```sh
+# preview dependencies
+npm run preset:deps -- utils/cache
+
+# write dependencies to presets/<selector>/preset.json
+npm run preset:deps -- utils/cache --write
 ```
 
 ---

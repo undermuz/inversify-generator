@@ -1,0 +1,18 @@
+{
+  "files": [
+    "loglevel.debug.ts",
+    "loglevel.factory.ts",
+    "loglevel.filter.ts",
+    "loglevel.module.ts",
+    "loglevel.saver.ts",
+    "loglevel.types.ts"
+  ],
+  "module": {
+    "file": "loglevel.module.ts",
+    "export": "LogLevelModule"
+  },
+  "dependencies": [
+    { "preset": "logger", "files": ["types.ts"] },
+    { "preset": "types", "files": ["logger.ts"] }
+  ]
+}

@@ -1,0 +1,4 @@
+{
+  "files": ["catchError.ts"],
+  "dependencies": [{ "preset": "types", "files": ["logger.ts"] }]
+}

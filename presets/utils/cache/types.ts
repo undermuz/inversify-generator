@@ -1,4 +1,4 @@
-import type { Initializable } from "@/di/types/initializable"
+import type { Initializable } from "../../types/initializable"
 
 export const CacheProvider = Symbol.for("CacheProvider")
 

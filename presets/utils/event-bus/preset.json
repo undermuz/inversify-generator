@@ -1,0 +1,12 @@
+{
+  "files": ["module.ts", "provider.ts", "types.ts"],
+  "module": {
+    "file": "module.ts",
+    "export": "EventBusModule"
+  },
+  "dependencies": [
+    { "preset": "utils/common", "files": ["catchError.ts"] },
+    { "preset": "logger", "files": ["types.ts"] },
+    { "preset": "types", "files": ["logger.ts"] }
+  ]
+}

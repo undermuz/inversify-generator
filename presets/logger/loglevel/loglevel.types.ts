@@ -1,5 +1,5 @@
 import log from "loglevel"
-import type { LogLevels } from "../logger.types"
+import type { LogLevels } from "../types"
 
 export type NamedLogger = log.Logger & { name?: string }
 

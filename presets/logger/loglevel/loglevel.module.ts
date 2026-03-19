@@ -2,7 +2,7 @@ import { ContainerModule, Factory } from "inversify"
 import type { ILogger } from "../../types/logger"
 
 import { loggerFactory } from "./loglevel.factory"
-import { ILoggerSettings } from "../logger.types"
+import { ILoggerSettings } from "../types"
 
 export const LogLevelModule = new ContainerModule(({ bind }) => {
     bind<Factory<ILogger>>("Factory<Logger>").toFactory(
