@@ -40,6 +40,8 @@ export async function addPresetModule(diPath, presetName) {
         const items = await fs.readdir(src);
         await fs.ensureDir(dst);
         for (const item of items) {
+            // Never copy internal tests from preset modules
+            if (item === "__tests__") continue;
             const s = path.join(src, item);
             const d = path.join(dst, item);
             const stat = await fs.stat(s);

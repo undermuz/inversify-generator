@@ -46,6 +46,18 @@ export const createDiContainer = () => {
     expect(containerContent).toContain('di.load(EnvModule);');
   });
 
+  it('should not copy __tests__ folders from preset', async () => {
+    const result = await addPresetModule(diPath, 'utils');
+
+    expect(result.name).toBe('utils');
+    expect(result.path).toBe(path.join(diPath, 'utils'));
+
+    // Copy should include the main code...
+    expect(await fs.pathExists(path.join(diPath, 'utils', 'event-bus', 'provider.ts'))).toBe(true);
+    // ...but internal test suites must be skipped
+    expect(await fs.pathExists(path.join(diPath, 'utils', 'event-bus', '__tests__'))).toBe(false);
+  });
+
   it('should throw error if preset does not exist', async () => {
     await expect(addPresetModule(diPath, 'nonexistent')).rejects.toThrow('not found in templates');
   });
