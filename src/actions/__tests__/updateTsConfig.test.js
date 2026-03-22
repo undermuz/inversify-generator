@@ -1,5 +1,6 @@
 import path from "path"
 import fs from "fs-extra"
+import { parse } from "jsonc-parser"
 import { updateTsConfig } from "../updateTsConfig.js"
 
 describe("updateTsConfig", () => {
@@ -12,6 +13,53 @@ describe("updateTsConfig", () => {
 
     afterEach(async () => {
         await fs.remove(tempDir)
+    })
+
+    it("should parse and update tsconfig with comments without stripping them", async () => {
+        const tsconfigPath = path.join(tempDir, "tsconfig.json")
+        await fs.writeFile(
+            tsconfigPath,
+            `{
+  // project settings
+  "compilerOptions": {
+    "target": "ES2020", /* inline */
+  },
+}`,
+            "utf8",
+        )
+
+        const result = await updateTsConfig(tempDir, null)
+        expect(result).toBe(tsconfigPath)
+
+        const raw = await fs.readFile(tsconfigPath, "utf8")
+        expect(raw).toContain("// project settings")
+        expect(raw).toContain("/* inline */")
+
+        const config = parse(raw, undefined, { allowTrailingComma: true })
+        expect(config.compilerOptions.emitDecoratorMetadata).toBe(true)
+        expect(config.compilerOptions.experimentalDecorators).toBe(true)
+    })
+
+    it("keeps CRLF and 4-space indentation when inserting compilerOptions", async () => {
+        const tsconfigPath = path.join(tempDir, "tsconfig.json")
+        await fs.writeFile(
+            tsconfigPath,
+            [
+                "{",
+                '    "compilerOptions": {',
+                '        "target": "ES2020"',
+                "    }",
+                "}",
+            ].join("\r\n"),
+            "utf8",
+        )
+
+        await updateTsConfig(tempDir, tsconfigPath)
+
+        const raw = await fs.readFile(tsconfigPath, "utf8")
+        expect(raw.includes("\r\n")).toBe(true)
+        expect(raw).toMatch(/\r\n {8}"emitDecoratorMetadata"/)
+        expect(raw).toMatch(/\r\n {8}"experimentalDecorators"/)
     })
 
     it("should update existing tsconfig.json in same folder", async () => {

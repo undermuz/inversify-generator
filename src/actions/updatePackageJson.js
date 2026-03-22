@@ -1,16 +1,25 @@
-import fs from "fs-extra";
-import path from "path";
+import path from "path"
+import { JsoncFileHelper } from "../helpers/JsoncFileHelper.js"
 
 export async function updatePackageJson(root) {
-    const pkgPath = path.join(root, "package.json");
-    const pkg = await fs.readJson(pkgPath);
+    const pkgPath = path.join(root, "package.json")
 
-    pkg.dependencies = {
-        ...pkg.dependencies,
-        inversify: "^7.11.0",
-        "reflect-metadata": "^0.2.2",
-    };
+    let { text } = await JsoncFileHelper.readFile(pkgPath)
+    const modifyFormat = JsoncFileHelper.modificationOptionsFromText(text)
 
-    await fs.writeJson(pkgPath, pkg, { spaces: 2 });
-    console.log(`📄 Updated package.json at ${pkgPath}`);
+    text = JsoncFileHelper.applyModification(
+        text,
+        ["dependencies", "inversify"],
+        "^7.11.0",
+        modifyFormat,
+    )
+    text = JsoncFileHelper.applyModification(
+        text,
+        ["dependencies", "reflect-metadata"],
+        "^0.2.2",
+        modifyFormat,
+    )
+
+    await JsoncFileHelper.writeFile(pkgPath, text)
+    console.log(`📄 Updated package.json at ${pkgPath}`)
 }

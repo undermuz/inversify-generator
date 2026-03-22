@@ -5,6 +5,7 @@ export default defineConfig({
     environment: 'node',
     include: [
       'src/actions/__tests__/**/*.test.js',
+      'src/preflight/__tests__/**/*.test.js',
       'presets/**/__tests__/**/*.test.{js,ts}',
     ],
     coverage: {

@@ -9,6 +9,7 @@ import { updatePackageJson } from "./actions/updatePackageJson.js";
 import { addModule } from "./actions/addModule.js";
 import { addPresetModule } from "./actions/addPresetModule.js";
 import { updateTsConfig } from "./actions/updateTsConfig.js";
+import { preflightInit } from "./preflight/initPreflight.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -22,19 +23,47 @@ program
         try {
             const projectPath = command.optsWithGlobals().project || "src/app";
             const target = path.resolve(process.cwd(), projectPath);
+            const tsconfigPath = command.optsWithGlobals().tsconfigPath;
+            const templatesDir = path.join(__dirname, "../templates");
+
+            console.log("🔍 Checking prerequisites...");
+            await preflightInit({
+                cwd: process.cwd(),
+                templatesDir,
+                targetDir: target,
+                tsconfigSearchRoot: target,
+                tsconfigPath,
+            });
 
             console.log("📦 Copy templates...");
 
-            await copyFiles(path.join(__dirname, "../templates"), target);
+            await copyFiles(templatesDir, target);
 
             console.log("📘 Update package.json...");
 
             await updatePackageJson(process.cwd());
 
             console.log("🔧 Update tsconfig.json...");
-
-            const tsconfigPath = command.optsWithGlobals().tsconfigPath;
-            await updateTsConfig(target, tsconfigPath);
+            try {
+                await updateTsConfig(target, tsconfigPath);
+            } catch (tsconfigError) {
+                console.error("");
+                console.error(
+                    "❌ Could not update tsconfig: the step failed or no suitable config was found.",
+                );
+                console.error("");
+                console.error("Details:");
+                console.error(`  ${tsconfigError.message}`);
+                console.error("");
+                console.error(
+                    "You can pass the path to your tsconfig file explicitly:",
+                );
+                console.error(
+                    "  -t, --tsconfigPath <path>  Path to tsconfig.json file",
+                );
+                console.error("");
+                process.exit(1);
+            }
 
             console.log("✨ InversifyJs successfully installed!");
         } catch (error) {
