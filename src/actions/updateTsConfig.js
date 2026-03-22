@@ -20,10 +20,18 @@ async function writeCompilerOptionsDecoratorFlags(filePath) {
         true,
         modifyFormat,
     )
+
     text = JsoncFileHelper.applyModification(
         text,
         ["compilerOptions", "experimentalDecorators"],
         true,
+        modifyFormat,
+    )
+
+    text = JsoncFileHelper.applyModification(
+        text,
+        ["compilerOptions", "strictPropertyInitialization"],
+        false,
         modifyFormat,
     )
 
@@ -34,6 +42,7 @@ export async function updateTsConfig(root, tsconfigPath) {
     const configPath = await resolveTsConfigPath(root, tsconfigPath, {
         quiet: false,
     })
+
     await writeCompilerOptionsDecoratorFlags(configPath)
 
     console.log(`📄 Updated tsconfig file: ${configPath}`)

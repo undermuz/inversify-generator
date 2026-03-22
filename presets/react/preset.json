@@ -1,7 +1,7 @@
 {
   "files": [
     "di.context.ts",
-    "di.provider.ts",
+    "di.provider.tsx",
     "hooks/useConstant.ts",
     "hooks/useDiContainer.ts",
     "hooks/useDi.ts"
