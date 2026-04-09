@@ -7,6 +7,8 @@ export type PromiseManagerItem<V = unknown, E = Error> = {
     signal: AbortSignal
 }
 
+export const PromiseManagerProvider = Symbol.for("PromiseManagerProvider")
+
 @injectable()
 export class PromiseManager<
     Events extends Record<string, unknown> = Record<string, unknown>,

@@ -1,0 +1,7 @@
+{
+  "files": ["module.ts", "provider.ts", "types.ts"],
+  "module": {
+    "file": "module.ts",
+    "export": "PromiseManagerModule"
+  }
+}

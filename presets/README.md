@@ -29,6 +29,7 @@ Each standalone preset is any folder with `preset.json`.
 - `utils/event-bus` -> `presets/utils/event-bus/README.md`
 - `utils/timers` -> `presets/utils/timers/README.md`
 - `utils/middleware` -> `presets/utils/middleware/README.md`
+- `utils/promise-manager` -> `presets/utils/promise-manager/README.md`
 - `utils/requests` -> `presets/utils/requests/README.md`
 
 ---
@@ -224,6 +225,18 @@ Each standalone preset is any folder with `preset.json`.
   - `types.ts`
 - Module wiring:
   - `MiddlewareModule` from `./utils/middleware/module`
+- Dependencies: none
+
+### `utils/promise-manager`
+
+- Description: typed promise manager service with cancellation support.
+- Path: `presets/utils/promise-manager`
+- Files:
+  - `module.ts`
+  - `provider.ts`
+  - `types.ts`
+- Module wiring:
+  - `PromiseManagerModule` from `./utils/promise-manager/module`
 - Dependencies: none
 
 ### `utils/requests`
