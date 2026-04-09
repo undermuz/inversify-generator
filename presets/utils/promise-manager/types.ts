@@ -15,6 +15,11 @@ export interface IPromiseManager<
     E extends Error = Error,
 > {
     /**
+     * Get the status of a promise by id.
+     */
+    getStatus(id: EventKey): "pending" | "resolved" | "rejected" | "none"
+
+    /**
      * Create or get a promise item for the given event key.
      * If already exists, returns existing item.
      */

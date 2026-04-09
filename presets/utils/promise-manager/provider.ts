@@ -15,6 +15,8 @@ export class PromiseManager<
     EventKey extends keyof Events = keyof Events,
     E extends Error = Error,
 > {
+    private _statuses = new Map<EventKey, "pending" | "resolved" | "rejected">()
+
     private _promises: Map<EventKey, PromiseManagerItem<Events[EventKey], E>> =
         new Map()
 
@@ -41,6 +43,7 @@ export class PromiseManager<
         this._controllers.get(id)?.abort()
 
         item.reject(reason)
+        this._statuses.set(id, "rejected")
 
         this.cleanup(id)
 
@@ -68,10 +71,17 @@ export class PromiseManager<
         }
 
         item.resolve(value)
+        this._statuses.set(id, "resolved")
 
         this.cleanup(id)
 
         return true
+    }
+
+    public getStatus(
+        id: EventKey,
+    ): "pending" | "resolved" | "rejected" | "none" {
+        return this._statuses.get(id) ?? "none"
     }
 
     public create<K extends EventKey>(
@@ -100,6 +110,8 @@ export class PromiseManager<
                 item as unknown as PromiseManagerItem<Events[EventKey], E>,
             )
 
+            this._controllers.set(id, controller)
+
             factory(controller.signal)
                 .then((value) => {
                     if (controller.signal.aborted) {
@@ -115,6 +127,8 @@ export class PromiseManager<
 
                     this.reject(id, reason)
                 })
+
+            this._statuses.set(id, "pending")
         }
 
         return {
