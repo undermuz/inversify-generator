@@ -31,6 +31,8 @@ Each standalone preset is any folder with `preset.json`.
 - `utils/middleware` -> `presets/utils/middleware/README.md`
 - `utils/promise-manager` -> `presets/utils/promise-manager/README.md`
 - `utils/requests` -> `presets/utils/requests/README.md`
+- `i18n` -> `presets/i18n/README.md`
+- `i18n/i18n-js` -> `presets/i18n/i18n-js/README.md`
 
 ---
 
@@ -139,12 +141,42 @@ Each standalone preset is any folder with `preset.json`.
 
 ## Utils Presets
 
+### `i18n`
+
+- Description: abstract i18n service contract.
+- Path: `presets/i18n`
+- Files:
+  - `types.ts`
+- Module wiring: no
+- Dependencies:
+  - `types` (`initializable.ts`, `persist-state.ts`, `stateful.ts`)
+
+### `i18n/i18n-js`
+
+- Description: i18n implementation based on `i18n-js`.
+- Path: `presets/i18n/i18n-js`
+- Files:
+  - `i18n.module.ts`
+  - `i18n.provider.ts`
+- Module wiring:
+  - `I18nJsModule` from `./i18n/i18n-js/i18n.module`
+- Dependencies:
+  - `i18n` (`types.ts`)
+  - `logger` (`types.ts`)
+  - `types` (`logger.ts`)
+  - `utils/common` (`invariant.ts`)
+  - `utils/local-storage` (`types.ts`)
+- Notes:
+  - Requires runtime packages: `i18n-js`, `valtio`
+  - Local-storage implementation must be chosen separately.
+
 ### `utils/common`
 
 - Description: common utility helpers.
 - Path: `presets/utils/common`
 - Files:
   - `catchError.ts`
+  - `invariant.ts`
 - Module wiring: no
 - Dependencies:
   - `types` (`logger.ts`)
@@ -268,5 +300,8 @@ npx @undermuz/inversify-generator add-preset-module utils/cache
 
 # choose logger implementation
 npx @undermuz/inversify-generator add-preset-module logger/logtape
+
+# i18n + runtime implementation
+npx @undermuz/inversify-generator add-preset-module i18n/i18n-js
 ```
 

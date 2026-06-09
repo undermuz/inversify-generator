@@ -37,8 +37,12 @@ A preset is a reusable DI module bundle located in `presets/<group>/<name>/` wit
 - `logger/logtape` - @logtape/logtape implementation
 - `logger/tslog` - tslog implementation
 
+**I18n Presets:**
+- `i18n` - i18n service contract (abstract)
+- `i18n/i18n-js` - i18n-js implementation with persisted locale state
+
 **Utils Presets:**
-- `utils/common` - common helpers (catchError)
+- `utils/common` - common helpers (catchError, invariant)
 - `utils/local-storage` - abstract contract
 - `utils/local-storage/browser-local-storage` - browser implementation
 - `utils/cache` - cache service with TTL
@@ -137,6 +141,8 @@ After changes:
 │       └── __tests__/
 ├── presets/                            # Preset library
 │   ├── env/
+│   ├── i18n/
+│   │   └── i18n-js/
 │   ├── react/
 │   ├── types/
 │   ├── logger/

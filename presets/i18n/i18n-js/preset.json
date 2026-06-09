@@ -1,0 +1,42 @@
+{
+  "files": [
+    "i18n.module.ts",
+    "i18n.provider.ts"
+  ],
+  "module": {
+    "file": "i18n.module.ts",
+    "export": "I18nJsModule"
+  },
+  "dependencies": [
+    {
+      "preset": "i18n",
+      "files": [
+        "types.ts"
+      ]
+    },
+    {
+      "preset": "logger",
+      "files": [
+        "types.ts"
+      ]
+    },
+    {
+      "preset": "types",
+      "files": [
+        "logger.ts"
+      ]
+    },
+    {
+      "preset": "utils/common",
+      "files": [
+        "invariant.ts"
+      ]
+    },
+    {
+      "preset": "utils/local-storage",
+      "files": [
+        "types.ts"
+      ]
+    }
+  ]
+}

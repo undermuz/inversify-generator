@@ -11,6 +11,7 @@ Shared utility helpers used by other utility presets.
 ## Files
 
 - `catchError.ts`
+- `invariant.ts`
 
 ## DI bindings
 
@@ -30,8 +31,11 @@ npx @undermuz/inversify-generator add-preset-module utils/common
 
 ```ts
 import { catchError } from "./utils/common/catchError";
+import invariant from "./utils/common/invariant";
 
 const safe = catchError(asyncTask, logger, "[task]");
 await safe();
+
+invariant(user !== null, "user is required");
 ```
 

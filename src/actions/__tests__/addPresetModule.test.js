@@ -146,6 +146,38 @@ export const createDiContainer = () => {
         expect(containerContent).toContain("di.load(EventBusModule);")
     })
 
+    it("should support i18n implementation preset (i18n/i18n-js)", async () => {
+        const result = await addPresetModule(diPath, "i18n/i18n-js")
+
+        expect(result.name).toBe("i18n/i18n-js")
+        expect(result.path).toBe(path.join(diPath, "i18n", "i18n-js"))
+
+        expect(await diPathExists("i18n", "i18n-js", "i18n.module.ts")).toBe(
+            true,
+        )
+        expect(await diPathExists("i18n", "i18n-js", "i18n.provider.ts")).toBe(
+            true,
+        )
+        expect(await diPathExists("i18n", "types.ts")).toBe(true)
+        expect(await diPathExists("utils", "common", "invariant.ts")).toBe(
+            true,
+        )
+        expect(await diPathExists("utils", "local-storage", "types.ts")).toBe(
+            true,
+        )
+        expect(await diPathExists("types", "persist-state.ts")).toBe(true)
+        expect(await diPathExists("types", "stateful.ts")).toBe(true)
+
+        const containerContent = await fs.readFile(
+            path.join(diPath, "container.ts"),
+            "utf-8",
+        )
+        expect(containerContent).toContain(
+            'import { I18nJsModule } from "./i18n/i18n-js/i18n.module";',
+        )
+        expect(containerContent).toContain("di.load(I18nJsModule);")
+    })
+
     it("should support choosing implementation preset (logger/logtape)", async () => {
         const result = await addPresetModule(diPath, "logger/logtape")
 

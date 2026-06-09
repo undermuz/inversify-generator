@@ -1,0 +1,15 @@
+{
+  "files": [
+    "types.ts"
+  ],
+  "dependencies": [
+    {
+      "preset": "types",
+      "files": [
+        "initializable.ts",
+        "persist-state.ts",
+        "stateful.ts"
+      ]
+    }
+  ]
+}
