@@ -1,11 +1,27 @@
 {
-  "files": ["logtape.factory.ts", "logtape.module.ts"],
+  "files": [
+    "logtape.factory.ts",
+    "logtape.module.ts"
+  ],
   "module": {
     "file": "logtape.module.ts",
     "export": "LogTapeModule"
   },
   "dependencies": [
-    { "preset": "logger", "files": ["types.ts"] },
-    { "preset": "types", "files": ["logger.ts"] }
-  ]
+    {
+      "preset": "logger",
+      "files": [
+        "types.ts"
+      ]
+    },
+    {
+      "preset": "types",
+      "files": [
+        "logger.ts"
+      ]
+    }
+  ],
+  "packageDependencies": {
+    "@logtape/logtape": "^2.0.4"
+  }
 }

@@ -1,10 +1,20 @@
 {
-  "files": ["module.ts", "provider.ts", "types.ts"],
+  "files": [
+    "module.ts",
+    "provider.ts",
+    "types.ts"
+  ],
   "module": {
     "file": "module.ts",
     "export": "RequestModule"
   },
   "dependencies": [
-    { "preset": "utils/middleware", "files": ["provider.ts", "types.ts"] }
+    {
+      "preset": "utils/middleware",
+      "files": [
+        "provider.ts",
+        "types.ts"
+      ]
+    }
   ]
 }

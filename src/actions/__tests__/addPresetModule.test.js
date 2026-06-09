@@ -146,6 +146,22 @@ export const createDiContainer = () => {
         expect(containerContent).toContain("di.load(EventBusModule);")
     })
 
+    it("should update package.json with preset package dependencies", async () => {
+        const pkgPath = path.join(tempDir, "package.json")
+        await fs.writeJson(pkgPath, {
+            name: "test",
+            dependencies: {},
+        })
+
+        await addPresetModule(diPath, "i18n/i18n-js", {
+            projectRoot: tempDir,
+        })
+
+        const pkg = await fs.readJson(pkgPath)
+        expect(pkg.dependencies["i18n-js"]).toBe("^4.5.1")
+        expect(pkg.dependencies.valtio).toBe("^2.1.5")
+    })
+
     it("should support i18n implementation preset (i18n/i18n-js)", async () => {
         const result = await addPresetModule(diPath, "i18n/i18n-js")
 

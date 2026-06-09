@@ -110,7 +110,9 @@ program
             const projectPath = command.optsWithGlobals().project || "src/app";
             const appPath = path.resolve(process.cwd(), projectPath);
             const diPath = path.join(appPath, "di");
-            const result = await addPresetModule(diPath, name);
+            const result = await addPresetModule(diPath, name, {
+                projectRoot: process.cwd(),
+            });
 
             console.log(`✨ Preset module '${result.name}' added successfully!`);
             console.log(`📁 Location: ${result.path}`);

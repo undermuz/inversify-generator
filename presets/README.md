@@ -11,6 +11,7 @@ Each standalone preset is any folder with `preset.json`.
 - Files copied: only those listed in `preset.json -> files`
 - Module wiring: performed only when `preset.json` has `module.file` + `module.export`
 - Dependencies: resolved from `preset.json -> dependencies` recursively
+- npm packages: added from `preset.json -> packageDependencies` to project `package.json`
 
 ## Per-preset READMEs
 
@@ -166,8 +167,9 @@ Each standalone preset is any folder with `preset.json`.
   - `types` (`logger.ts`)
   - `utils/common` (`invariant.ts`)
   - `utils/local-storage` (`types.ts`)
+- Package dependencies:
+  - `i18n-js`, `valtio`
 - Notes:
-  - Requires runtime packages: `i18n-js`, `valtio`
   - Local-storage implementation must be chosen separately.
 
 ### `utils/common`

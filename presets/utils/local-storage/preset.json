@@ -1,4 +1,13 @@
 {
-  "files": ["types.ts"],
-  "dependencies": [{ "preset": "types", "files": ["initializable.ts"] }]
+  "files": [
+    "types.ts"
+  ],
+  "dependencies": [
+    {
+      "preset": "types",
+      "files": [
+        "initializable.ts"
+      ]
+    }
+  ]
 }

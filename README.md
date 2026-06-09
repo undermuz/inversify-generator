@@ -117,6 +117,8 @@ npx @undermuz/inversify-generator add-preset-module env --project=apps/web-app/s
 The command will:
 
 - Copy the entire preset directory from `presets/<name>` to the app's `di/` directory
+- Resolve and copy transitive preset dependencies from `preset.json`
+- Add required npm packages from `preset.json -> packageDependencies` to `package.json`
 - If the preset contains `module.ts`, automatically update the main `container.ts` to include the new module
 
 ---
@@ -166,8 +168,9 @@ Each standalone preset has `preset.json` with:
 - `files`: what to copy
 - `module` (optional): what to import/load into `container.ts`
 - `dependencies` (optional): dependent preset selectors and optional file subsets
+- `packageDependencies` (optional): npm packages to add to the project `package.json`
 
-To auto-suggest dependencies from relative imports:
+To auto-suggest preset and npm dependencies from imports:
 
 ```sh
 # preview dependencies

@@ -1,5 +1,9 @@
 {
-  "files": ["module.ts", "provider.ts", "types.ts"],
+  "files": [
+    "module.ts",
+    "provider.ts",
+    "types.ts"
+  ],
   "module": {
     "file": "module.ts",
     "export": "MiddlewareModule"

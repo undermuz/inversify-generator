@@ -1,4 +1,14 @@
 {
-  "files": ["catchError.ts", "invariant.ts"],
-  "dependencies": [{ "preset": "types", "files": ["logger.ts"] }]
+  "files": [
+    "catchError.ts",
+    "invariant.ts"
+  ],
+  "dependencies": [
+    {
+      "preset": "types",
+      "files": [
+        "logger.ts"
+      ]
+    }
+  ]
 }

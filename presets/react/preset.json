@@ -5,5 +5,8 @@
     "hooks/useConstant.ts",
     "hooks/useDiContainer.ts",
     "hooks/useDi.ts"
-  ]
+  ],
+  "packageDependencies": {
+    "react": "^19.1.0"
+  }
 }

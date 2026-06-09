@@ -1,8 +1,18 @@
 {
-  "files": ["module.ts", "provider.ts"],
+  "files": [
+    "module.ts",
+    "provider.ts"
+  ],
   "module": {
     "file": "module.ts",
     "export": "BrowserLocalStorageModule"
   },
-  "dependencies": [{ "preset": "utils/local-storage", "files": ["types.ts"] }]
+  "dependencies": [
+    {
+      "preset": "utils/local-storage",
+      "files": [
+        "types.ts"
+      ]
+    }
+  ]
 }

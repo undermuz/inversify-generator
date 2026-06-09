@@ -91,14 +91,18 @@ npx @undermuz/inversify-generator add-preset-module utils/event-bus
      },
      "dependencies": [
        { "preset": "other/dependency", "files": ["file.ts"] }
-     ]
+     ],
+     "packageDependencies": {
+       "some-npm-package": "^1.0.0"
+     }
    }
    ```
 
-4. **Generate dependency manifest**:
+4. **Generate dependency manifest** (preset deps + npm deps from imports):
    ```sh
-   npm run preset:deps group-name/preset-name --write
+   node scripts/generate-preset-manifest.mjs group-name/preset-name --write
    ```
+   Add new npm packages to `presets/package.json` first so versions can be resolved.
 
 5. **Update presets/README.md** with preset documentation
 
@@ -179,9 +183,9 @@ After changes:
 
 ### Debug preset dependencies
 ```sh
-npm run preset:deps utils/cache
+node scripts/generate-preset-manifest.mjs utils/cache
 ```
-Shows: selector, detected dependencies
+Shows: selector, detected preset dependencies and npm `packageDependencies`
 
 ### Write preset dependencies back to manifest
 ```sh

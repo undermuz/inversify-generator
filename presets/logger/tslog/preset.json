@@ -1,11 +1,27 @@
 {
-  "files": ["tslog.factory.ts", "tslog.module.ts"],
+  "files": [
+    "tslog.factory.ts",
+    "tslog.module.ts"
+  ],
   "module": {
     "file": "tslog.module.ts",
     "export": "TsLogModule"
   },
   "dependencies": [
-    { "preset": "logger", "files": ["types.ts"] },
-    { "preset": "types", "files": ["logger.ts"] }
-  ]
+    {
+      "preset": "logger",
+      "files": [
+        "types.ts"
+      ]
+    },
+    {
+      "preset": "types",
+      "files": [
+        "logger.ts"
+      ]
+    }
+  ],
+  "packageDependencies": {
+    "tslog": "^4.10.2"
+  }
 }

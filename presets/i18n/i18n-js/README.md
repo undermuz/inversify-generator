@@ -27,11 +27,10 @@ Loads `I18nJsModule` from `./i18n/i18n-js/i18n.module`.
 
 ## Runtime dependencies
 
-Install in your project:
+Added automatically to `package.json` when installing this preset:
 
-```sh
-npm install i18n-js valtio
-```
+- `i18n-js`
+- `valtio`
 
 ## Usage
 

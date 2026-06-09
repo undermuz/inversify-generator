@@ -1,3 +1,6 @@
 {
-  "files": ["initializable.ts", "logger.ts"]
+  "files": [
+    "initializable.ts",
+    "logger.ts"
+  ]
 }

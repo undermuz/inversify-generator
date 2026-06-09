@@ -9,7 +9,17 @@
     "export": "CacheModule"
   },
   "dependencies": [
-    { "preset": "utils/local-storage", "files": ["types.ts"] },
-    { "preset": "types", "files": ["initializable.ts"] }
+    {
+      "preset": "types",
+      "files": [
+        "initializable.ts"
+      ]
+    },
+    {
+      "preset": "utils/local-storage",
+      "files": [
+        "types.ts"
+      ]
+    }
   ]
 }

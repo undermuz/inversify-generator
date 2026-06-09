@@ -5,6 +5,8 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const PRESETS_ROOT = path.join(PROJECT_ROOT, "presets");
+const PRESETS_PACKAGE_JSON = path.join(PRESETS_ROOT, "package.json");
+const BUILTIN_PACKAGES = new Set(["inversify", "reflect-metadata"]);
 
 function normalizeSelector(rawSelector) {
     const parts = String(rawSelector)
@@ -51,6 +53,24 @@ async function listPresetSelectors() {
 
     await walk(PRESETS_ROOT);
     return found;
+}
+
+function toPackageName(specifier) {
+    if (specifier.startsWith("@")) {
+        const parts = specifier.split("/");
+        return `${parts[0]}/${parts[1]}`;
+    }
+
+    return specifier.split("/")[0];
+}
+
+async function loadPresetPackageVersions() {
+    if (!(await fs.pathExists(PRESETS_PACKAGE_JSON))) {
+        return {};
+    }
+
+    const pkg = JSON.parse(await fs.readFile(PRESETS_PACKAGE_JSON, "utf-8"));
+    return pkg.dependencies ?? {};
 }
 
 function extractImports(content) {
@@ -133,7 +153,9 @@ async function main() {
     }
 
     const presetSelectors = await listPresetSelectors();
+    const presetPackageVersions = await loadPresetPackageVersions();
     const depFilesMap = new Map();
+    const packageNames = new Set();
 
     for (const relFile of manifest.files) {
         const absFile = path.join(presetDir, relFile);
@@ -152,6 +174,10 @@ async function main() {
             }
 
             if (!specifier.startsWith("./") && !specifier.startsWith("../")) {
+                const packageName = toPackageName(specifier);
+                if (!BUILTIN_PACKAGES.has(packageName)) {
+                    packageNames.add(packageName);
+                }
                 continue;
             }
 
@@ -188,8 +214,37 @@ async function main() {
             files: [...files].sort(),
         }));
 
+    const packageDependencies = {};
+    const missingPackages = [];
+
+    for (const packageName of [...packageNames].sort()) {
+        const version = presetPackageVersions[packageName];
+        if (version) {
+            packageDependencies[packageName] = version;
+        } else {
+            missingPackages.push(packageName);
+        }
+    }
+
+    if (missingPackages.length > 0) {
+        throw new Error(
+            `Preset '${selector}' uses packages missing from presets/package.json: ${missingPackages.join(", ")}`,
+        );
+    }
+
     if (shouldWrite) {
-        manifest.dependencies = dependencies;
+        if (dependencies.length > 0) {
+            manifest.dependencies = dependencies;
+        } else {
+            delete manifest.dependencies;
+        }
+
+        if (Object.keys(packageDependencies).length > 0) {
+            manifest.packageDependencies = packageDependencies;
+        } else {
+            delete manifest.packageDependencies;
+        }
+
         await fs.writeFile(
             manifestPath,
             `${JSON.stringify(manifest, null, 2)}\n`,
@@ -199,7 +254,9 @@ async function main() {
         return;
     }
 
-    console.log(JSON.stringify({ selector, dependencies }, null, 2));
+    console.log(
+        JSON.stringify({ selector, dependencies, packageDependencies }, null, 2),
+    );
 }
 
 main().catch((error) => {

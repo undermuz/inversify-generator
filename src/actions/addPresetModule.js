@@ -1,6 +1,8 @@
 import fs from "fs-extra";
 import path from "path";
 import { fileURLToPath } from "url";
+import { collectPresetPackageDependencies } from "../helpers/collectPresetPackageDependencies.js";
+import { updatePackageJson } from "./updatePackageJson.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PRESETS_ROOT = path.join(__dirname, "../../presets");
@@ -141,6 +143,17 @@ async function readManifest(selector) {
         throw new Error(`Preset '${selector}' has invalid dependencies section`);
     }
 
+    if (manifest.packageDependencies !== undefined) {
+        if (
+            typeof manifest.packageDependencies !== "object" ||
+            Array.isArray(manifest.packageDependencies)
+        ) {
+            throw new Error(
+                `Preset '${selector}' has invalid packageDependencies section`,
+            );
+        }
+    }
+
     return { presetDir, manifest };
 }
 
@@ -208,7 +221,7 @@ async function buildPresetGraph(rootSelector) {
  * copied directory contains a module entry in `preset.json`,
  * wire it into container.ts.
  */
-export async function addPresetModule(diPath, presetName) {
+export async function addPresetModule(diPath, presetName, options = {}) {
     if (!presetName || typeof presetName !== "string") {
         throw new Error("Preset name is required");
     }
@@ -286,6 +299,18 @@ export async function addPresetModule(diPath, presetName) {
 
     const containerPath = path.join(diPath, "container.ts");
     await updateContainerWithModules(containerPath, modulesToLoad);
+
+    const { projectRoot } = options;
+    if (projectRoot) {
+        const packageDependencies = collectPresetPackageDependencies(
+            nodes,
+            orderedSelectors,
+        );
+
+        if (Object.keys(packageDependencies).length > 0) {
+            await updatePackageJson(projectRoot, packageDependencies);
+        }
+    }
 
     return { name: selector, path: destDir };
 }

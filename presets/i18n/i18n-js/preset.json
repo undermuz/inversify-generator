@@ -38,5 +38,9 @@
         "types.ts"
       ]
     }
-  ]
+  ],
+  "packageDependencies": {
+    "i18n-js": "^4.5.1",
+    "valtio": "^2.1.5"
+  }
 }
