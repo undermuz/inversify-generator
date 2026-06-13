@@ -15,6 +15,7 @@ React integration helpers for DI container access in components and hooks.
 - `hooks/useConstant.ts`
 - `hooks/useDiContainer.ts`
 - `hooks/useDi.ts`
+- `hooks/useT.ts`
 
 ## DI bindings
 
@@ -41,6 +42,8 @@ import { Suspense } from "react"
 
 import { DiProvider } from "./react/di.provider"
 import { useDi } from "./react/hooks/useDi"
+import { useT } from "./react/hooks/useT"
+import { I18nProvider } from "./i18n/types"
 
 function Feature() {
     const gpsLocator = useDi<IGpsProvider>(GpsProvider)
@@ -48,8 +51,9 @@ function Feature() {
 
     const geocoder = useDi<IGeocoderProvider>(GeocoderProvider)
     const location = useDi<ILocationProvider>(LocationProvider)
+    const t = useT(I18nProvider)
 
-    return null
+    return <span>{t("greeting")}</span>
 }
 
 export function App() {

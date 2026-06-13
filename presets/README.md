@@ -151,6 +151,9 @@ Each standalone preset is any folder with `preset.json`.
 - Module wiring: no
 - Dependencies:
   - `types` (`initializable.ts`, `persist-state.ts`, `stateful.ts`)
+  - `react` (`di.context.ts`, `hooks/useConstant.ts`, `hooks/useDiContainer.ts`, `hooks/useDi.ts`, `hooks/useT.ts`)
+- Package dependencies:
+  - `react`
 
 ### `i18n/i18n-js`
 

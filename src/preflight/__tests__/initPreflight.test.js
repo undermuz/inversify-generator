@@ -17,7 +17,7 @@ describe("preflightInit", () => {
 
     /**
      * Minimal valid tree: templates dir, package.json, tsconfig.json with compilerOptions
-     * above the search root (src/app → walks up to project root).
+     * above the search root (src → walks up to project root).
      */
     async function writeValidPackageAndTsconfig() {
         await fs.writeJson(path.join(tempDir, "package.json"), {

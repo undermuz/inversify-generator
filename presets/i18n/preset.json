@@ -10,6 +10,19 @@
         "persist-state.ts",
         "stateful.ts"
       ]
+    },
+    {
+      "preset": "react",
+      "files": [
+        "di.context.ts",
+        "hooks/useConstant.ts",
+        "hooks/useDiContainer.ts",
+        "hooks/useDi.ts",
+        "hooks/useT.ts"
+      ]
     }
-  ]
+  ],
+  "packageDependencies": {
+    "react": "^19.1.0"
+  }
 }

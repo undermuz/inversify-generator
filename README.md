@@ -38,7 +38,7 @@ npx @undermuz/inversify-generator@latest init --project=./apps/web-app/src
 By default, it installs di files into:
 
 ```
-<cwd>/src
+<cwd>/src/di
 <cwd>/package.json
 ```
 
@@ -128,7 +128,7 @@ The command will:
 ### Initial structure
 
 ```
-di/
+src/di/
   container.ts
   my-provider/
     types.ts
@@ -141,12 +141,12 @@ di/
 When you add a new module using `add-module`, the following files are created:
 
 ```
-di/
+src/di/
   my-new-module/
     types.ts
     module.ts
     provider.ts
-  container.tsx   # (automatically updated)
+  container.ts    # (automatically updated)
 ```
 
 ### Adding preset modules
@@ -154,7 +154,7 @@ di/
 When you add a preset module using `add-preset-module`, files are copied according to preset manifests:
 
 ```
-di/
+src/di/
   <PRESET_SELECTOR>/   # copied from presets/<PRESET_SELECTOR>
     <FILES_FROM_MANIFEST>
   <DEPENDENCY_SELECTOR>/
@@ -240,11 +240,11 @@ If you generated the `react` preset (or manually set up the bindings), you can e
 ```tsx
 // src/App.tsx
 import React from "react";
-import { useDi } from "./di/ReactProvider";
+import { useDi } from "./di/react/hooks/useDi";
 import { TYPES } from "./di/some-module/types";
 import { SomeService } from "./di/some-module/provider";
 
-import { DiProvider } from "./di/ReactProvider";
+import { DiProvider } from "./di/react/di.provider";
 
 function Page() {
   const container = useDi();

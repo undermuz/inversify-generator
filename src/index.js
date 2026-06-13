@@ -12,16 +12,18 @@ import { updateTsConfig } from "./actions/updateTsConfig.js";
 import { preflightInit } from "./preflight/initPreflight.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const DEFAULT_PROJECT_PATH = "src";
 
 // Initialize command
 program
     .command("init")
     .description("Initialize InversifyJs in project")
-    .option("-p, --project <path>", "Path to src/app", "src/app")
+    .option("-p, --project <path>", "Path to src", DEFAULT_PROJECT_PATH)
     .option("-t, --tsconfigPath <path>", "Path to tsconfig.json file")
     .action(async (options, command) => {
         try {
-            const projectPath = command.optsWithGlobals().project || "src/app";
+            const projectPath =
+                command.optsWithGlobals().project || DEFAULT_PROJECT_PATH;
             const target = path.resolve(process.cwd(), projectPath);
             const tsconfigPath = command.optsWithGlobals().tsconfigPath;
             const templatesDir = path.join(__dirname, "../templates");
@@ -77,13 +79,14 @@ program
     .command("add-module <name>")
     .option(
         "-p, --project <path>",
-        "Path to app directory (module will be created inside)",
-        "src/app",
+        "Path to src directory (di/ will be created inside)",
+        DEFAULT_PROJECT_PATH,
     )
     .description("Add a new module to the project")
     .action(async (name, options, command) => {
         try {
-            const projectPath = command.optsWithGlobals().project || "src/app";
+            const projectPath =
+                command.optsWithGlobals().project || DEFAULT_PROJECT_PATH;
             const appPath = path.resolve(process.cwd(), projectPath);
             const diPath = path.join(appPath, "di");
             const result = await addModule(diPath, name);
@@ -101,13 +104,14 @@ program
     .command("add-preset-module <name>")
     .option(
         "-p, --project <path>",
-        "Path to app directory (module will be created inside)",
-        "src/app",
+        "Path to src directory (di/ will be created inside)",
+        DEFAULT_PROJECT_PATH,
     )
     .description("Copy a predefined preset module into the project")
     .action(async (name, options, command) => {
         try {
-            const projectPath = command.optsWithGlobals().project || "src/app";
+            const projectPath =
+                command.optsWithGlobals().project || DEFAULT_PROJECT_PATH;
             const appPath = path.resolve(process.cwd(), projectPath);
             const diPath = path.join(appPath, "di");
             const result = await addPresetModule(diPath, name, {

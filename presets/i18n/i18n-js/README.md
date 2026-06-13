@@ -64,3 +64,14 @@ await i18n.initialize({ locale: "en-US" });
 console.log(i18n.t("greeting"));
 console.log(i18n.getLocale());
 ```
+
+```tsx
+import { I18nProvider } from "./i18n/types";
+import { useT } from "./react/hooks/useT";
+
+function Greeting() {
+    const t = useT(I18nProvider);
+
+    return <span>{t("greeting")}</span>;
+}
+```

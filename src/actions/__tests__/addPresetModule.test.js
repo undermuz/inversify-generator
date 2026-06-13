@@ -160,6 +160,7 @@ export const createDiContainer = () => {
         const pkg = await fs.readJson(pkgPath)
         expect(pkg.dependencies["i18n-js"]).toBe("^4.5.1")
         expect(pkg.dependencies.valtio).toBe("^2.1.5")
+        expect(pkg.dependencies.react).toBe("^19.1.0")
     })
 
     it("should support i18n implementation preset (i18n/i18n-js)", async () => {
@@ -183,6 +184,8 @@ export const createDiContainer = () => {
         )
         expect(await diPathExists("types", "persist-state.ts")).toBe(true)
         expect(await diPathExists("types", "stateful.ts")).toBe(true)
+        expect(await diPathExists("react", "hooks", "useT.ts")).toBe(true)
+        expect(await diPathExists("react", "hooks", "useDi.ts")).toBe(true)
 
         const containerContent = await fs.readFile(
             path.join(diPath, "container.ts"),

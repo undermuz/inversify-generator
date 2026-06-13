@@ -19,6 +19,11 @@ No module bindings are added by this preset.
 ## Dependencies
 
 - `types` (`initializable.ts`, `persist-state.ts`, `stateful.ts`)
+- `react` (`di.context.ts`, `hooks/useConstant.ts`, `hooks/useDiContainer.ts`, `hooks/useDi.ts`, `hooks/useT.ts`)
+
+## Package dependencies
+
+- `react`
 
 ## When to use
 
@@ -37,4 +42,11 @@ import type { I18nService } from "./i18n/types";
 import { I18nProvider } from "./i18n/types";
 
 const i18n = di.get<I18nService>(I18nProvider);
+```
+
+```tsx
+import { I18nProvider } from "./i18n/types";
+import { useT } from "./react/hooks/useT";
+
+const t = useT(I18nProvider);
 ```

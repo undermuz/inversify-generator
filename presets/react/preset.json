@@ -4,7 +4,8 @@
     "di.provider.tsx",
     "hooks/useConstant.ts",
     "hooks/useDiContainer.ts",
-    "hooks/useDi.ts"
+    "hooks/useDi.ts",
+    "hooks/useT.ts"
   ],
   "packageDependencies": {
     "react": "^19.1.0"
