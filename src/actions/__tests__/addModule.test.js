@@ -9,8 +9,7 @@ describe('addModule', () => {
   beforeEach(async () => {
     tempDir = path.join(process.cwd(), 'temp-test-' + Math.random());
     await fs.ensureDir(tempDir);
-    diPath = path.join(tempDir, 'di');
-    await fs.ensureDir(diPath);
+    diPath = tempDir;
     // Copy a basic container.ts
     await fs.writeFile(path.join(diPath, 'container.ts'), `import { Container } from "inversify";
 

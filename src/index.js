@@ -10,23 +10,47 @@ import { addModule } from "./actions/addModule.js";
 import { addPresetModule } from "./actions/addPresetModule.js";
 import { updateTsConfig } from "./actions/updateTsConfig.js";
 import { preflightInit } from "./preflight/initPreflight.js";
+import {
+    resolveProjectPath,
+} from "./helpers/resolveProjectPath.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DEFAULT_PROJECT_PATH = "src";
+
+function formatProjectPath(absolutePath) {
+    const relative = path.relative(process.cwd(), absolutePath);
+
+    return relative || ".";
+}
+
+function logResolvedProjectPath(result) {
+    if (result.detected) {
+        console.log(
+            `📍 Detected project directory: ${formatProjectPath(result.absolutePath)}`,
+        );
+        return;
+    }
+
+    if (result.usedFallback) {
+        console.log(
+            `📍 Using default project directory: ${formatProjectPath(result.absolutePath)}`,
+        );
+    }
+}
 
 // Initialize command
 program
     .command("init")
     .description("Initialize InversifyJs in project")
-    .option("-p, --project <path>", "Path to src", DEFAULT_PROJECT_PATH)
+    .option("-p, --project <path>", "Path to src directory")
     .option("-t, --tsconfigPath <path>", "Path to tsconfig.json file")
     .action(async (options, command) => {
         try {
-            const projectPath =
-                command.optsWithGlobals().project || DEFAULT_PROJECT_PATH;
-            const target = path.resolve(process.cwd(), projectPath);
+            const { absolutePath: target } = await resolveProjectPath(
+                command.opts().project,
+                { autoDetect: false },
+            );
             const tsconfigPath = command.optsWithGlobals().tsconfigPath;
-            const templatesDir = path.join(__dirname, "../templates");
+            const templatesDir = path.join(__dirname, "../templates/di");
 
             console.log("🔍 Checking prerequisites...");
             await preflightInit({
@@ -77,19 +101,13 @@ program
 // Add module command
 program
     .command("add-module <name>")
-    .option(
-        "-p, --project <path>",
-        "Path to src directory (di/ will be created inside)",
-        DEFAULT_PROJECT_PATH,
-    )
+    .option("-p, --project <path>", "Path to src directory")
     .description("Add a new module to the project")
     .action(async (name, options, command) => {
         try {
-            const projectPath =
-                command.optsWithGlobals().project || DEFAULT_PROJECT_PATH;
-            const appPath = path.resolve(process.cwd(), projectPath);
-            const diPath = path.join(appPath, "di");
-            const result = await addModule(diPath, name);
+            const resolved = await resolveProjectPath(command.opts().project);
+            logResolvedProjectPath(resolved);
+            const result = await addModule(resolved.absolutePath, name);
 
             console.log(`✨ Module '${result.name}' added successfully!`);
             console.log(`📁 Location: ${result.path}`);
@@ -102,19 +120,13 @@ program
 // Add preset module command
 program
     .command("add-preset-module <name>")
-    .option(
-        "-p, --project <path>",
-        "Path to src directory (di/ will be created inside)",
-        DEFAULT_PROJECT_PATH,
-    )
+    .option("-p, --project <path>", "Path to src directory")
     .description("Copy a predefined preset module into the project")
     .action(async (name, options, command) => {
         try {
-            const projectPath =
-                command.optsWithGlobals().project || DEFAULT_PROJECT_PATH;
-            const appPath = path.resolve(process.cwd(), projectPath);
-            const diPath = path.join(appPath, "di");
-            const result = await addPresetModule(diPath, name, {
+            const resolved = await resolveProjectPath(command.opts().project);
+            logResolvedProjectPath(resolved);
+            const result = await addPresetModule(resolved.absolutePath, name, {
                 projectRoot: process.cwd(),
             });
 

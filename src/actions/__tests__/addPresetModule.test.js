@@ -11,9 +11,7 @@ describe("addPresetModule", () => {
     beforeEach(async () => {
         tempDir = path.join(process.cwd(), "temp-test-" + Math.random())
         await fs.ensureDir(tempDir)
-        diPath = path.join(tempDir, "di")
-        await fs.ensureDir(diPath)
-        // Copy a basic container.ts
+        diPath = tempDir
         await fs.writeFile(
             path.join(diPath, "container.ts"),
             `import { Container } from "inversify";

@@ -23,6 +23,16 @@ It installs required dependencies, generates di structure, and configures a read
 
 ## 🛠 Usage
 
+All commands accept `-p, --project <path>`.
+
+For `add-module` and `add-preset-module`, when `--project` is omitted the CLI searches from the current directory for a source file that imports `inversify` and contains `new Container()`. The directory of that file is used as the project path. If nothing is found, it falls back to `src`.
+
+| Command | `--project` omitted | `--project` provided |
+| --- | --- | --- |
+| `init` | uses `src` | uses the given path |
+| `add-module` | auto-detect, else `src` | uses the given path |
+| `add-preset-module` | auto-detect, else `src` | uses the given path |
+
 ### Initialize InversifyJS
 
 Run the generator inside your project:
@@ -35,10 +45,12 @@ npx @undermuz/inversify-generator@latest init
 npx @undermuz/inversify-generator@latest init --project=./apps/web-app/src
 ```
 
-By default, it installs di files into:
+By default (`--project=src`), it installs files into:
 
 ```
-<cwd>/src/di
+<cwd>/src/
+  container.ts
+  my-provider/
 <cwd>/package.json
 ```
 
@@ -47,7 +59,9 @@ To specify a custom path:
 ```sh
 npx @undermuz/inversify-generator init --project=apps/web-app/src
 
-<cwd>/apps/web-app/src
+<cwd>/apps/web-app/src/
+  container.ts
+  my-provider/
 <cwd>/package.json
 ```
 
@@ -58,25 +72,25 @@ After initialization, you can add new modules using:
 ```sh
 npx @undermuz/inversify-generator add-module <name>
 
-<cwd>/src/di/<name>
+<cwd>/src/<name>
 ```
 
 Examples:
 
 ```sh
-# Add a "settings" module (uses default src)
+# Add a "settings" module (default --project=src)
 npx @undermuz/inversify-generator add-module settings
 
 # Add a "session" module
 npx @undermuz/inversify-generator add-module session
 
-# Specify custom app path (module directory will be created inside apps/web-app/src/di)
+# Specify custom project path (module directory will be created inside apps/web-app/src/)
 npx @undermuz/inversify-generator add-module dashboard --project=apps/web-app/src
 ```
 
 The command will:
 
-- Create a new directory for the module inside the app's `di/` directory
+- Create a new directory for the module inside the project `--project` directory
 - Generate `types.ts`
 - Generate `provider.ts` with provider
 - Generate `module.ts` with container module
@@ -89,7 +103,7 @@ After initialization, you can add predefined preset modules using:
 ```sh
 npx @undermuz/inversify-generator add-preset-module <selector>
 
-<cwd>/src/di/<selector>
+<cwd>/src/<selector>
 ```
 
 `<selector>` supports nested preset paths (for example `utils/cache`, `logger/logtape`).
@@ -110,13 +124,13 @@ npx @undermuz/inversify-generator add-preset-module utils/cache
 # Choose concrete logger implementation
 npx @undermuz/inversify-generator add-preset-module logger/logtape
 
-# Specify custom app path
+# Specify custom project path
 npx @undermuz/inversify-generator add-preset-module env --project=apps/web-app/src
 ```
 
 The command will:
 
-- Copy the entire preset directory from `presets/<name>` to the app's `di/` directory
+- Copy preset files from `presets/<name>` into the project `--project` directory
 - Resolve and copy transitive preset dependencies from `preset.json`
 - Add required npm packages from `preset.json -> packageDependencies` to `package.json`
 - If the preset contains `module.ts`, automatically update the main `container.ts` to include the new module
@@ -128,7 +142,7 @@ The command will:
 ### Initial structure
 
 ```
-src/di/
+src/
   container.ts
   my-provider/
     types.ts
@@ -141,7 +155,7 @@ src/di/
 When you add a new module using `add-module`, the following files are created:
 
 ```
-src/di/
+src/
   my-new-module/
     types.ts
     module.ts
@@ -154,7 +168,7 @@ src/di/
 When you add a preset module using `add-preset-module`, files are copied according to preset manifests:
 
 ```
-src/di/
+src/
   <PRESET_SELECTOR>/   # copied from presets/<PRESET_SELECTOR>
     <FILES_FROM_MANIFEST>
   <DEPENDENCY_SELECTOR>/
@@ -194,7 +208,7 @@ npm run preset:deps -- utils/cache --write
 After running the generator and adding modules, you can use the container in your application code.  Typical workflow:
 
 ```ts
-// src/di/container.ts (generated)
+// src/container.ts (generated)
 import { Container } from "inversify";
 import { someModule } from "./some-module/module";
 
@@ -203,14 +217,14 @@ container.load(someModule);
 ```
 
 ```ts
-// src/di/some-module/types.ts
+// src/some-module/types.ts
 export const TYPES = {
   SomeService: Symbol.for("SomeService"),
 };
 ```
 
 ```ts
-// src/di/some-module/provider.ts
+// src/some-module/provider.ts
 import { injectable } from "inversify";
 import { createSomeService } from "./service";
 
@@ -224,9 +238,9 @@ export class SomeService {
 ```ts
 // src/index.ts
 import "reflect-metadata"; // required by inversify
-import { container } from "./di/container";
-import { TYPES } from "./di/some-module/types";
-import { SomeService } from "./di/some-module/provider";
+import { container } from "./container";
+import { TYPES } from "./some-module/types";
+import { SomeService } from "./some-module/provider";
 
 const service = container.get<SomeService>(TYPES.SomeService);
 service.sayHi();
@@ -240,11 +254,11 @@ If you generated the `react` preset (or manually set up the bindings), you can e
 ```tsx
 // src/App.tsx
 import React from "react";
-import { useDi } from "./di/react/hooks/useDi";
-import { TYPES } from "./di/some-module/types";
-import { SomeService } from "./di/some-module/provider";
+import { useDi } from "./react/hooks/useDi";
+import { TYPES } from "./some-module/types";
+import { SomeService } from "./some-module/provider";
 
-import { DiProvider } from "./di/react/di.provider";
+import { DiProvider } from "./react/di.provider";
 
 function Page() {
   const container = useDi();
